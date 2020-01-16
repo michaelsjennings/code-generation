@@ -1,0 +1,43 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(SolutionDir)MSJennings.CodeGeneration\bin\Debug\net461\MSJennings.CodeGeneration.dll" #>
+<#@ assembly name="$(SolutionDir)MSJennings.CodeGeneration\bin\Debug\net461\MSJennings.SqlSchema.dll" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="MSJennings.CodeGeneration" #>
+<#@ import namespace="MSJennings.SqlSchema" #>
+<#@ output extension=".txt" #>
+
+<#
+	var connectionString = @"Data Source=(localdb)\MSSQLLocalDB; Initial Catalog=AdventureWorks2016; Integrated Security=True;";
+	
+    var metadata = new SqlMetadata();
+    metadata.LoadFromDatabase(connectionString);
+
+	var database = new SqlDatabase();
+	database.LoadFromMetadata(metadata);
+
+	var codeWriter = new CodeWriter(GenerationEnvironment);
+	var outputPath = Path.Combine(Path.GetTempPath(), "Template1_Output");
+#>
+
+<# foreach (var table in database.Tables) { #>
+<#   codeWriter.BeginFile(Path.Combine(outputPath, "Entities", table.CSharpPublicSingularName() + ".cs")); #>
+
+namespace Template1.Output
+{
+	public class <#= table.CSharpPublicSingularName() #>
+	{
+<#    foreach (var column in table.Columns) { #>
+		public <#= column.CSharpTypeName() #> <#= column.CSharpPublicSingularName() #> { get; set; }
+<#    } #>
+	}
+}
+
+<#   codeWriter.EndFile(); #>
+<# } #>
+<# codeWriter.WriteAllFiles(); #>
+
+// Output written to <#= outputPath #>
