@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MSJennings.CodeGeneration.SqlSchema")]
-[assembly: AssemblyDescription("Provides utilities and helper classes that can be used to assist code generation scenarios that are specific to SQL Server.")]
+[assembly: AssemblyDescription("Provides utilities and helper classes that can be used to assist code generation scenarios that are specific to SQL Server as a metadata source.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Michael S. Jennings")]
 [assembly: AssemblyProduct("MSJennings.CodeGeneration.SqlSchema")]
