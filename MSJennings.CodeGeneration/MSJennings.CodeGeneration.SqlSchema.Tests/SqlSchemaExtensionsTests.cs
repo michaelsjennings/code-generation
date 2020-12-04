@@ -1,10 +1,9 @@
 ﻿using MSJennings.SqlSchema;
-using MSJennings.CodeGeneration.SqlSchema;
 using System;
 using System.Linq;
 using Xunit;
 
-namespace MSJennings.CodeGeneration.Tests
+namespace MSJennings.CodeGeneration.SqlSchema.Tests
 {
     public class SqlSchemaExtensionsTests
     {

@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSJennings.CodeGeneration.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSJennings.CodeGeneration.TestsT4", "MSJennings.CodeGeneration.TestsT4\MSJennings.CodeGeneration.TestsT4.csproj", "{AEDE8B12-FA29-4C20-8065-BCE99AA2CA77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSJennings.CodeGeneration.SqlSchema", "MSJennings.CodeGeneration.SqlSchema\MSJennings.CodeGeneration.SqlSchema.csproj", "{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSJennings.CodeGeneration.SqlSchema", "MSJennings.CodeGeneration.SqlSchema\MSJennings.CodeGeneration.SqlSchema.csproj", "{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSJennings.CodeGeneration.SqlSchema.Tests", "MSJennings.CodeGeneration.SqlSchema.Tests\MSJennings.CodeGeneration.SqlSchema.Tests.csproj", "{C230BEEE-48AE-4AF9-90E4-841E97610821}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
