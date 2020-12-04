@@ -30,7 +30,7 @@ namespace MSJennings.CodeGeneration
 
         public string IndentString { get; set; } = new string(' ', 4);
 
-        public int IndentLevel { get; private set; } = 0;
+        public int IndentLevel { get; private set; }
 
         public bool RemoveFilesFromOutputAfterWriting { get; set; } = true;
 
@@ -96,6 +96,11 @@ namespace MSJennings.CodeGeneration
                 throw new ArgumentNullException(nameof(items));
             }
 
+            if (transform == null)
+            {
+                throw new ArgumentNullException(nameof(transform));
+            }
+
             foreach (var item in items)
             {
                 var value = transform(item);
@@ -130,6 +135,11 @@ namespace MSJennings.CodeGeneration
             if (items == null)
             {
                 throw new ArgumentNullException(nameof(items));
+            }
+
+            if (transform == null)
+            {
+                throw new ArgumentNullException(nameof(transform));
             }
 
             foreach (var item in items)

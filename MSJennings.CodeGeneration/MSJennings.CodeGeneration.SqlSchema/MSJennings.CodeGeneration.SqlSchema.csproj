@@ -2,25 +2,24 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netcoreapp3.1;net48</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CodeAnalysisRuleSet>MSJennings.CodeGeneration.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>MSJennings.CodeGeneration.SqlSchema.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CodeAnalysisRuleSet>MSJennings.CodeGeneration.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>MSJennings.CodeGeneration.SqlSchema.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Humanizer.Core" Version="2.8.26" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MSJennings.CodeGeneration" Version="1.0.7643.19982" />
     <PackageReference Include="MSJennings.SqlSchema" Version="1.0.7318.38797" />
   </ItemGroup>
 

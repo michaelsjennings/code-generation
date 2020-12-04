@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.539
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSJennings.CodeGeneration", "MSJennings.CodeGeneration\MSJennings.CodeGeneration.csproj", "{B5DB83F7-2257-4A8B-9572-48DA84A29DD1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSJennings.CodeGeneration.Tests", "MSJennings.CodeGeneration.Tests\MSJennings.CodeGeneration.Tests.csproj", "{D86CF455-91E4-4908-89B8-E91F87D6F645}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSJennings.CodeGeneration.TestsT4", "MSJennings.CodeGeneration.TestsT4\MSJennings.CodeGeneration.TestsT4.csproj", "{AEDE8B12-FA29-4C20-8065-BCE99AA2CA77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSJennings.CodeGeneration.SqlSchema", "MSJennings.CodeGeneration.SqlSchema\MSJennings.CodeGeneration.SqlSchema.csproj", "{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MSJennings.CodeGeneration.SqlSchema.Tests", "MSJennings.CodeGeneration.SqlSchema.Tests\MSJennings.CodeGeneration.SqlSchema.Tests.csproj", "{C230BEEE-48AE-4AF9-90E4-841E97610821}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{AEDE8B12-FA29-4C20-8065-BCE99AA2CA77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEDE8B12-FA29-4C20-8065-BCE99AA2CA77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEDE8B12-FA29-4C20-8065-BCE99AA2CA77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38EEC4C-49C4-4666-8411-4DB39A67ABCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C230BEEE-48AE-4AF9-90E4-841E97610821}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

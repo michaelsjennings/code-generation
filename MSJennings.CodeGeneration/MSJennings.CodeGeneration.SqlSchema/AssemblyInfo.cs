@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MSJennings.CodeGeneration")]
-[assembly: AssemblyDescription("Provides utilities and helper classes that can be used to assist code generation.")]
+[assembly: AssemblyTitle("MSJennings.CodeGeneration.SqlSchema")]
+[assembly: AssemblyDescription("Provides utilities and helper classes that can be used to assist code generation scenarios that are specific to SQL Server as a metadata source.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Michael S. Jennings")]
-[assembly: AssemblyProduct("MSJennings.CodeGeneration")]
+[assembly: AssemblyProduct("MSJennings.CodeGeneration.SqlSchema")]
 [assembly: AssemblyCopyright("Copyright © 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("3902b52d-ae5d-4d12-97c4-ee06e899c054")]
+[assembly: Guid("6887b1eb-97d2-4a31-9607-86c4bc672034")]
 
 // Version information for an assembly consists of the following four values:
 //
