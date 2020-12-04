@@ -15,9 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" PrivateAssets="All" />
-    <PackageReference Include="MSJennings.CodeGeneration" Version="1.0.7319.34424" />
-    <PackageReference Include="MSJennings.SqlSchema" Version="1.0.7037.28239" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2" PrivateAssets="All" />
+    <PackageReference Include="MSJennings.CodeGeneration" Version="1.0.7643.19982" />
+    <PackageReference Include="MSJennings.SqlSchema" Version="1.0.7318.38797" />
   </ItemGroup>
 
 </Project>
