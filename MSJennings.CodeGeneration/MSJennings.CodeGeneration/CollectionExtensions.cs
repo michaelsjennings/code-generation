@@ -8,55 +8,55 @@ namespace MSJennings.CodeGeneration
     {
         #region IsIn - string
 
-        public static bool IsIn(this string value, StringComparison comparisonType, IEnumerable<string> list)
+        public static bool IsIn(this string value, StringComparison comparisonType, IEnumerable<string> collection)
         {
-            if (list == null)
+            if (collection == null)
             {
-                throw new ArgumentNullException(nameof(list));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            return list.Any(x => x.Equals(value, comparisonType));
+            return collection.Any(x => x.Equals(value, comparisonType));
         }
 
-        public static bool IsIn(this string value, StringComparison comparisonType, params string[] list)
+        public static bool IsIn(this string value, StringComparison comparisonType, params string[] collection)
         {
-            return value.IsIn(comparisonType, list.AsEnumerable());
+            return value.IsIn(comparisonType, collection.AsEnumerable());
         }
 
-        public static bool IsIn(this string value, IEnumerable<string> list)
+        public static bool IsIn(this string value, IEnumerable<string> collection)
         {
-            return value.IsIn(StringComparison.OrdinalIgnoreCase, list);
+            return value.IsIn(StringComparison.OrdinalIgnoreCase, collection);
         }
 
-        public static bool IsIn(this string value, params string[] list)
+        public static bool IsIn(this string value, params string[] collection)
         {
-            return value.IsIn(StringComparison.OrdinalIgnoreCase, list);
+            return value.IsIn(StringComparison.OrdinalIgnoreCase, collection);
         }
 
         #endregion
 
         #region IsIn - <T>
 
-        public static bool IsIn<T>(this T value, IEnumerable<T> list)
+        public static bool IsIn<T>(this T value, IEnumerable<T> collection)
         {
-            if (list == null)
+            if (collection == null)
             {
-                throw new ArgumentNullException(nameof(list));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            return list.Any(x => x.Equals(value));
+            return collection.Any(x => x.Equals(value));
         }
 
-        public static bool IsIn<T>(this T value, params T[] list)
+        public static bool IsIn<T>(this T value, params T[] collection)
         {
-            return value.IsIn(list.AsEnumerable());
+            return value.IsIn(collection.AsEnumerable());
         }
 
         #endregion
 
         #region IsFirstIn - string
 
-        public static bool IsFirstIn(this string value, StringComparison comparisonType, IEnumerable<string> list)
+        public static bool IsFirstIn(this string value, StringComparison comparisonType, IList<string> list)
         {
             if (value == null)
             {
@@ -68,48 +68,58 @@ namespace MSJennings.CodeGeneration
                 throw new ArgumentNullException(nameof(list));
             }
 
-            return value.Equals(list.First(), comparisonType);
+            if (list.Count < 1)
+            {
+                return false;
+            }
+
+            return value.Equals(list[0], comparisonType);
         }
 
         public static bool IsFirstIn(this string value, StringComparison comparisonType, params string[] list)
         {
-            return value.IsFirstIn(comparisonType, list.AsEnumerable());
+            return value.IsFirstIn(comparisonType, list.ToList());
         }
 
-        public static bool IsFirstIn(this string value, IEnumerable<string> list)
+        public static bool IsFirstIn(this string value, IList<string> list)
         {
             return value.IsFirstIn(StringComparison.OrdinalIgnoreCase, list);
         }
 
         public static bool IsFirstIn(this string value, params string[] list)
         {
-            return value.IsFirstIn(StringComparison.OrdinalIgnoreCase, list.AsEnumerable());
+            return value.IsFirstIn(StringComparison.OrdinalIgnoreCase, list.ToList());
         }
 
         #endregion
 
         #region IsFirstIn - <T>
 
-        public static bool IsFirstIn<T>(this T value, IEnumerable<T> list)
+        public static bool IsFirstIn<T>(this T value, IList<T> list)
         {
             if (list == null)
             {
                 throw new ArgumentNullException(nameof(list));
             }
 
-            return value.Equals(list.First());
+            if (list.Count < 1)
+            {
+                return false;
+            }
+
+            return value.Equals(list[0]);
         }
 
         public static bool IsFirstIn<T>(this T value, params T[] list)
         {
-            return value.Equals(list.AsEnumerable().First());
+            return value.IsFirstIn(list.ToList());
         }
 
         #endregion
 
-        #region isLastIn - string
+        #region IsLastIn - string
 
-        public static bool IsLastIn(this string value, StringComparison comparisonType, IEnumerable<string> list)
+        public static bool IsLastIn(this string value, StringComparison comparisonType, IList<string> list)
         {
             if (value == null)
             {
@@ -119,6 +129,11 @@ namespace MSJennings.CodeGeneration
             if (list == null)
             {
                 throw new ArgumentNullException(nameof(list));
+            }
+
+            if (list.Count < 1)
+            {
+                return false;
             }
 
             return value.Equals(list.Last(), comparisonType);
@@ -126,24 +141,24 @@ namespace MSJennings.CodeGeneration
 
         public static bool IsLastIn(this string value, StringComparison comparisonType, params string[] list)
         {
-            return value.IsLastIn(comparisonType, list.AsEnumerable());
+            return value.IsLastIn(comparisonType, list.ToList());
         }
 
-        public static bool IsLastIn(this string value, IEnumerable<string> list)
+        public static bool IsLastIn(this string value, IList<string> list)
         {
             return value.IsLastIn(StringComparison.OrdinalIgnoreCase, list);
         }
 
         public static bool IsLastIn(this string value, params string[] list)
         {
-            return value.IsLastIn(StringComparison.OrdinalIgnoreCase, list.AsEnumerable());
+            return value.IsLastIn(StringComparison.OrdinalIgnoreCase, list.ToList());
         }
 
         #endregion
 
         #region IsLastIn - <T>
 
-        public static bool IsLastIn<T>(this T value, IEnumerable<T> list)
+        public static bool IsLastIn<T>(this T value, IList<T> list)
         {
             if (list == null)
             {
@@ -155,7 +170,7 @@ namespace MSJennings.CodeGeneration
 
         public static bool IsLastIn<T>(this T value, params T[] list)
         {
-            return value.Equals(list.AsEnumerable().Last());
+            return value.IsLastIn(list.ToList());
         }
 
         #endregion
