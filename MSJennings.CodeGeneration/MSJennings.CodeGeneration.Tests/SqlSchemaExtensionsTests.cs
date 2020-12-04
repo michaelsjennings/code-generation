@@ -1,4 +1,5 @@
 ﻿using MSJennings.SqlSchema;
+using MSJennings.CodeGeneration.SqlSchema;
 using System;
 using System.Linq;
 using Xunit;

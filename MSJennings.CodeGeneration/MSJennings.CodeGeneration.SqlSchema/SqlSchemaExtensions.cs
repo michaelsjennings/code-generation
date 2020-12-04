@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace MSJennings.CodeGeneration
+namespace MSJennings.CodeGeneration.SqlSchema
 {
     public static class SqlSchemaExtensions
     {
