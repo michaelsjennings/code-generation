@@ -22,6 +22,7 @@
         Decimal,
         Integer,
         List,
+        KeyValuePair,
         String,
         Time,
 #pragma warning restore CA1720 // Identifier contains type name

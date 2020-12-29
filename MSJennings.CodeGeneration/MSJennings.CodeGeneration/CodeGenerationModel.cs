@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -176,6 +175,7 @@ namespace MSJennings.CodeGeneration
             var deserializedModel = JsonConvert.DeserializeObject<CodeGenerationModel>(json);
             LoadFromOtherModel(deserializedModel);
         }
+
         public void LoadFromTypes(IEnumerable<Type> types)
         {
             if (types == null)
@@ -192,14 +192,25 @@ namespace MSJennings.CodeGeneration
 
                 foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 {
-                    // todo: generics
-                    // todo: lists
+                    var modelPropertyType = property.PropertyType.ToModelPropertyType();
 
-                    _ = AddProperty(property.Name, );
+                    if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
+                    {
+                        _ = AddListProperty(property.Name, modelPropertyType.ListItemType.LogicalType, property.IsRequired());
+                    }
+                    else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
+                    {
+                        _ = AddProperty(property.Name, property.PropertyType.Name, property.IsRequired());
+                    }
+                    else
+                    {
+                        _ = AddProperty(property.Name, modelPropertyType.LogicalType, property.IsRequired());
+                    }
                 }
             }
         }
 
+        /*
         public void LoadFromSqlDatabase(string connectionString)
         {
             if (string.IsNullOrWhiteSpace(connectionString))
@@ -209,7 +220,9 @@ namespace MSJennings.CodeGeneration
 
             throw new NotImplementedException();
         }
+        */
 
+        /*
         public void LoadFromAssembly(string assemblyFileName, IEnumerable<string> namespaces = null, bool includeNestedNamespaces = true)
         {
             if (string.IsNullOrWhiteSpace(assemblyFileName))
@@ -222,5 +235,6 @@ namespace MSJennings.CodeGeneration
                 throw new FileNotFoundException("The file was not found at the specified path.", assemblyFileName);
             }
         }
+        */
     }
 }
