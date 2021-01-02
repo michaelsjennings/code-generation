@@ -211,18 +211,6 @@ namespace MSJennings.CodeGeneration
         }
 
         /*
-        public void LoadFromSqlDatabase(string connectionString)
-        {
-            if (string.IsNullOrWhiteSpace(connectionString))
-            {
-                throw new ArgumentNullException(nameof(connectionString));
-            }
-
-            throw new NotImplementedException();
-        }
-        */
-
-        /*
         public void LoadFromAssembly(string assemblyFileName, IEnumerable<string> namespaces = null, bool includeNestedNamespaces = true)
         {
             if (string.IsNullOrWhiteSpace(assemblyFileName))
