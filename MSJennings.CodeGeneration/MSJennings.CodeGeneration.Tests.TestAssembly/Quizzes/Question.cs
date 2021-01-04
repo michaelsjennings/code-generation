@@ -11,5 +11,7 @@ namespace MSJennings.CodeGeneration.Tests.TestAssembly.Quizzes
         public IDictionary<char, string> Choices { get; } = new Dictionary<char, string>();
 
         public char CorrectChoice { get; set; }
+
+        public int[] QuizIds { get; set; }
     }
 }

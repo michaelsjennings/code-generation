@@ -20,7 +20,10 @@ namespace MSJennings.CodeGeneration
             var logicalType = typeReference.ToModelPropertyLogicalType();
             if (logicalType == ModelPropertyLogicalType.List)
             {
-                var isDictionary = typeReference.Resolve().Interfaces.Any(x => x.InterfaceType.FullName.StartsWith(typeof(IDictionary<,>).FullName));
+                var isDictionary =
+                    typeReference.FullName.StartsWith(typeof(IDictionary<,>).FullName, StringComparison.Ordinal) ||
+                    typeReference.Resolve().Interfaces.Any(x => x.InterfaceType.FullName.StartsWith(typeof(IDictionary<,>).FullName, StringComparison.Ordinal));
+
                 if (isDictionary)
                 {
                     return new ModelPropertyType
@@ -35,10 +38,19 @@ namespace MSJennings.CodeGeneration
                         }
                     };
                 }
+                else if (typeReference.IsArray)
+                {
+                    return new ModelPropertyType
+                    {
+                        LogicalType = logicalType,
+                        ObjectTypeName = null,
+                        ListItemType = typeReference.GetElementType().ToModelPropertyType(),
+                    };
+                }
                 else
                 {
                     var genericInstanceType = (GenericInstanceType)typeReference;
-                    var listItemType = genericInstanceType.GenericArguments.FirstOrDefault(); // ?? type.GetElementType();
+                    var listItemType = genericInstanceType.GenericArguments.FirstOrDefault();
 
                     return new ModelPropertyType
                     {
@@ -109,7 +121,7 @@ namespace MSJennings.CodeGeneration
             {
                 return ModelPropertyLogicalType.KeyValuePair;
             }
-            else if (typeReference.IsGenericInstance && typeReference.Resolve().Interfaces.Any(x => x.InterfaceType.FullName.StartsWith(typeof(IEnumerable<>).FullName)))
+            else if (typeReference.IsArray || (typeReference.IsGenericInstance && typeReference.Resolve().Interfaces.Any(x => x.InterfaceType.FullName.StartsWith(typeof(IEnumerable<>).FullName))))
             {
                 return ModelPropertyLogicalType.List;
             }

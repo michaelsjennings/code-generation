@@ -66,6 +66,23 @@ namespace MSJennings.CodeGeneration.Tests
         }
 
         [Fact]
+        public void ToModelPropertyType_WithArrayOfInts_ShouldReturnExpectedResult()
+        {
+            // Arrange
+            var assemblyDefinition = LoadTestAssembly();
+            var typeDefinition = GetTypeDefinition(assemblyDefinition, "Question");
+            var propertyDefintion = GetPropertyDefinition(typeDefinition, "QuizIds");
+
+            // Act
+            var modelPropertyType = propertyDefintion.PropertyType.ToModelPropertyType();
+
+            // Assert
+            Assert.Equal(ModelPropertyLogicalType.List, modelPropertyType.LogicalType);
+            Assert.Null(modelPropertyType.ObjectTypeName);
+            Assert.Equal(ModelPropertyLogicalType.Integer, modelPropertyType.ListItemType.LogicalType);
+        }
+
+        [Fact]
         public void ToModelPropertyType_WithDictionary_ShouldReturnExpectedResult()
         {
             // Arrange
@@ -81,5 +98,22 @@ namespace MSJennings.CodeGeneration.Tests
             Assert.Null(modelPropertyType.ObjectTypeName);
             Assert.Equal(ModelPropertyLogicalType.KeyValuePair, modelPropertyType.ListItemType.LogicalType);
         }
+
+        [Fact]
+        public void ToModelPropertyType_WithObject_ShouldReturnExpectedResult()
+        {
+            // Arrange
+            var assemblyDefinition = LoadTestAssembly();
+            var typeDefinition = GetTypeDefinition(assemblyDefinition, "Question");
+
+            // Act
+            var modelPropertyType = typeDefinition.ToModelPropertyType();
+
+            // Assert
+            Assert.Equal(ModelPropertyLogicalType.Object, modelPropertyType.LogicalType);
+            Assert.Equal(typeDefinition.Name, modelPropertyType.ObjectTypeName);
+            Assert.Null(modelPropertyType.ListItemType);
+        }
+
     }
 }
