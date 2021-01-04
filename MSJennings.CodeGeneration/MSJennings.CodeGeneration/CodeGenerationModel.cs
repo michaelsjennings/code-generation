@@ -199,15 +199,15 @@ namespace MSJennings.CodeGeneration
 
                     if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
                     {
-                        _ = AddListProperty(property.Name, modelPropertyType.ListItemType.LogicalType, property.IsRequired());
+                        _ = AddListProperty(property.Name, modelPropertyType.ListItemType.LogicalType, property.HasRequiredAttribute());
                     }
                     else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
                     {
-                        _ = AddProperty(property.Name, property.PropertyType.Name, property.IsRequired());
+                        _ = AddProperty(property.Name, property.PropertyType.Name, property.HasRequiredAttribute());
                     }
                     else
                     {
-                        _ = AddProperty(property.Name, modelPropertyType.LogicalType, property.IsRequired());
+                        _ = AddProperty(property.Name, modelPropertyType.LogicalType, property.HasRequiredAttribute());
                     }
                 }
             }
@@ -215,8 +215,6 @@ namespace MSJennings.CodeGeneration
 
         public void LoadFromAssembly(string assemblyFileName)
         {
-            // todo: refactor this
-
             if (string.IsNullOrWhiteSpace(assemblyFileName))
             {
                 throw new ArgumentNullException(nameof(assemblyFileName));
@@ -241,71 +239,32 @@ namespace MSJennings.CodeGeneration
                     continue;
                 }
 
-                if (!typeDefinition.Properties.Any(x => x.PropertyType.Resolve().IsPublic))
+                var publicInstanceProperties = typeDefinition.GetPublicInstanceProperties();
+                if (!publicInstanceProperties.Any())
                 {
                     continue;
                 }
-
                 _ = SetCurrentNamespace(typeDefinition.Namespace);
                 _ = AddEntity(typeDefinition.Name);
 
-                foreach (var propertyDefinition in typeDefinition.Properties)
+                foreach (var propertyDefinition in publicInstanceProperties)
                 {
-                    if (!propertyDefinition.PropertyType.Resolve().IsPublic)
-                    {
-                        continue;
-                    }
+                    var modelPropertyType = propertyDefinition.PropertyType.ToModelPropertyType();
 
-                    if (!propertyDefinition.HasThis) // does `HasThis` indicate an instance property?
+                    if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
                     {
-                        continue;
+                        _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.LogicalType, propertyDefinition.HasRequiredAttribute());
+                    }
+                    else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
+                    {
+                        _ = AddProperty(propertyDefinition.Name, propertyDefinition.PropertyType.Name, propertyDefinition.HasRequiredAttribute());
+                    }
+                    else
+                    {
+                        _ = AddProperty(propertyDefinition.Name, modelPropertyType.LogicalType, propertyDefinition.HasRequiredAttribute());
                     }
                 }
             }
-        }
-
-        private static string GetGenericTypeNameString(TypeReference typeReference)
-        {
-            var typeName = typeReference.Name;
-
-            if (!typeReference.IsGenericInstance)
-            {
-                return typeName;
-            }
-
-            var genericTypeNameMarkerIndex = typeName.IndexOf('`', StringComparison.Ordinal);
-
-            var genericTypeName =
-                genericTypeNameMarkerIndex >= 0
-                ? typeName.Substring(0, genericTypeNameMarkerIndex)
-                : typeName;
-
-            var genericInstanceType = (GenericInstanceType)typeReference;
-            var genericArguments = genericInstanceType.GenericArguments;
-
-            var genericArgumentsString = string.Join(",", genericArguments.Select(x => GetGenericTypeNameString(x)));
-            return $"{genericTypeName}<{genericArgumentsString}>";
-        }
-
-        private static ModelPropertyType GetGenericModelPropertyType(TypeReference typeReference)
-        {
-            if (!typeReference.IsGenericInstance)
-            {
-                return typeReference.ToModelPropertyType();
-            }
-
-            var genericTypeNameMarkerIndex = typeName.IndexOf('`', StringComparison.Ordinal);
-
-            var genericTypeName =
-                genericTypeNameMarkerIndex >= 0
-                ? typeName.Substring(0, genericTypeNameMarkerIndex)
-                : typeName;
-
-            var genericInstanceType = (GenericInstanceType)typeReference;
-            var genericArguments = genericInstanceType.GenericArguments;
-
-            var genericArgumentsString = string.Join(",", genericArguments.Select(x => GetGenericTypeNameString(x)));
-            return $"{genericTypeName}<{genericArgumentsString}>";
         }
     }
 }

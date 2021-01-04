@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:MSJennings.CodeGeneration.CodeGenerationModel.LoadFromTypes(System.Collections.Generic.IEnumerable{System.Type})")]
+[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:MSJennings.CodeGeneration.CodeGenerationModel.LoadFromAssembly(System.String)")]

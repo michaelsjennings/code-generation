@@ -1,13 +1,73 @@
 ﻿using Mono.Cecil;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace MSJennings.CodeGeneration
 {
-    internal static class CecilExtensions
+    public static class CecilExtensions
     {
-        internal static ModelPropertyLogicalType ToModelPropertyLogicalType(this TypeReference typeReference)
+#pragma warning disable CS3001 // Argument type is not CLS-compliant
+#pragma warning disable CS3002 // Return type is not CLS-compliant
+        public static ModelPropertyType ToModelPropertyType(this TypeReference typeReference)
+        {
+            if (typeReference == null)
+            {
+                throw new ArgumentNullException(nameof(typeReference));
+            }
+
+            var logicalType = typeReference.ToModelPropertyLogicalType();
+            if (logicalType == ModelPropertyLogicalType.List)
+            {
+                var isDictionary = typeReference.Resolve().Interfaces.Any(x => x.InterfaceType.FullName.StartsWith(typeof(IDictionary<,>).FullName));
+                if (isDictionary)
+                {
+                    return new ModelPropertyType
+                    {
+                        LogicalType = logicalType,
+                        ObjectTypeName = null,
+                        ListItemType = new ModelPropertyType
+                        {
+                            LogicalType = ModelPropertyLogicalType.KeyValuePair,
+                            ObjectTypeName = null,
+                            ListItemType = null,
+                        }
+                    };
+                }
+                else
+                {
+                    var genericInstanceType = (GenericInstanceType)typeReference;
+                    var listItemType = genericInstanceType.GenericArguments.FirstOrDefault(); // ?? type.GetElementType();
+
+                    return new ModelPropertyType
+                    {
+                        LogicalType = logicalType,
+                        ObjectTypeName = null,
+                        ListItemType = listItemType.ToModelPropertyType(),
+                    };
+                }
+            }
+
+            if (logicalType == ModelPropertyLogicalType.Object)
+            {
+                return new ModelPropertyType
+                {
+                    LogicalType = logicalType,
+                    ObjectTypeName = typeReference.Name,
+                    ListItemType = null,
+                };
+            }
+
+            return new ModelPropertyType
+            {
+                LogicalType = logicalType,
+                ObjectTypeName = null,
+                ListItemType = null,
+            };
+        }
+
+        private static ModelPropertyLogicalType ToModelPropertyLogicalType(this TypeReference typeReference)
         {
             if (typeReference == null)
             {
@@ -58,5 +118,28 @@ namespace MSJennings.CodeGeneration
                 return ModelPropertyLogicalType.Object;
             }
         }
+
+        public static IEnumerable<PropertyDefinition> GetPublicInstanceProperties(this TypeDefinition typeDefinition)
+
+        {
+            if (typeDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(typeDefinition));
+            }
+
+            return typeDefinition.Properties.Where(x => x.HasThis && x.PropertyType.Resolve().IsPublic);
+        }
+
+        public static bool HasRequiredAttribute(this PropertyDefinition propertyDefinition)
+        {
+            if (propertyDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(propertyDefinition));
+            }
+
+            return propertyDefinition.CustomAttributes.Any(x => x.AttributeType.FullName.Equals(typeof(RequiredAttribute).FullName, StringComparison.Ordinal));
+        }
+#pragma warning restore CS3001 // Argument type is not CLS-compliant
+#pragma warning restore CS3002 // Return type is not CLS-compliant
     }
 }

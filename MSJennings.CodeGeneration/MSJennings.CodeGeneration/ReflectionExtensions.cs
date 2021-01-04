@@ -117,7 +117,7 @@ namespace MSJennings.CodeGeneration
             }
         }
 
-        public static bool IsRequired(this PropertyInfo property)
+        public static bool HasRequiredAttribute(this PropertyInfo property)
         {
             return Attribute.IsDefined(property, typeof(RequiredAttribute));
         }
