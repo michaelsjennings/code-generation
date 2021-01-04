@@ -4,7 +4,7 @@ using Xunit;
 
 namespace MSJennings.CodeGeneration.Tests
 {
-    public class CollectionExtensionTests
+    public class CollectionExtensionsTests
     {
         [Fact]
         public void Concat_WithIEnumerableStringAndStringParams_ShouldConcatenate()

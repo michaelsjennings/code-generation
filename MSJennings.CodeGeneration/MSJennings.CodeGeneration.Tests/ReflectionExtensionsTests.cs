@@ -3,7 +3,7 @@ using Xunit;
 
 namespace MSJennings.CodeGeneration.Tests
 {
-    public class ReflectionExtensionTests
+    public class ReflectionExtensionsTests
     {
         [Fact]
         public void ToModelPropertyType_WithBool_ShouldReturnExpectedResult()
