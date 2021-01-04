@@ -1,7 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Mono.Cecil;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -210,9 +213,10 @@ namespace MSJennings.CodeGeneration
             }
         }
 
-        /*
-        public void LoadFromAssembly(string assemblyFileName, IEnumerable<string> namespaces = null, bool includeNestedNamespaces = true)
+        public void LoadFromAssembly(string assemblyFileName)
         {
+            // todo: refactor this
+
             if (string.IsNullOrWhiteSpace(assemblyFileName))
             {
                 throw new ArgumentNullException(nameof(assemblyFileName));
@@ -222,7 +226,86 @@ namespace MSJennings.CodeGeneration
             {
                 throw new FileNotFoundException("The file was not found at the specified path.", assemblyFileName);
             }
+
+            var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFileName);
+
+            foreach (var typeDefinition in assemblyDefinition.MainModule.Types)
+            {
+                if (typeDefinition.CustomAttributes.Any(x => x.AttributeType.Name.Equals(nameof(GeneratedCodeAttribute), StringComparison.Ordinal)))
+                {
+                    continue;
+                }
+
+                if (!typeDefinition.IsPublic)
+                {
+                    continue;
+                }
+
+                if (!typeDefinition.Properties.Any(x => x.PropertyType.Resolve().IsPublic))
+                {
+                    continue;
+                }
+
+                _ = SetCurrentNamespace(typeDefinition.Namespace);
+                _ = AddEntity(typeDefinition.Name);
+
+                foreach (var propertyDefinition in typeDefinition.Properties)
+                {
+                    if (!propertyDefinition.PropertyType.Resolve().IsPublic)
+                    {
+                        continue;
+                    }
+
+                    if (!propertyDefinition.HasThis) // does `HasThis` indicate an instance property?
+                    {
+                        continue;
+                    }
+                }
+            }
         }
-        */
+
+        private static string GetGenericTypeNameString(TypeReference typeReference)
+        {
+            var typeName = typeReference.Name;
+
+            if (!typeReference.IsGenericInstance)
+            {
+                return typeName;
+            }
+
+            var genericTypeNameMarkerIndex = typeName.IndexOf('`', StringComparison.Ordinal);
+
+            var genericTypeName =
+                genericTypeNameMarkerIndex >= 0
+                ? typeName.Substring(0, genericTypeNameMarkerIndex)
+                : typeName;
+
+            var genericInstanceType = (GenericInstanceType)typeReference;
+            var genericArguments = genericInstanceType.GenericArguments;
+
+            var genericArgumentsString = string.Join(",", genericArguments.Select(x => GetGenericTypeNameString(x)));
+            return $"{genericTypeName}<{genericArgumentsString}>";
+        }
+
+        private static ModelPropertyType GetGenericModelPropertyType(TypeReference typeReference)
+        {
+            if (!typeReference.IsGenericInstance)
+            {
+                return typeReference.ToModelPropertyType();
+            }
+
+            var genericTypeNameMarkerIndex = typeName.IndexOf('`', StringComparison.Ordinal);
+
+            var genericTypeName =
+                genericTypeNameMarkerIndex >= 0
+                ? typeName.Substring(0, genericTypeNameMarkerIndex)
+                : typeName;
+
+            var genericInstanceType = (GenericInstanceType)typeReference;
+            var genericArguments = genericInstanceType.GenericArguments;
+
+            var genericArgumentsString = string.Join(",", genericArguments.Select(x => GetGenericTypeNameString(x)));
+            return $"{genericTypeName}<{genericArgumentsString}>";
+        }
     }
 }

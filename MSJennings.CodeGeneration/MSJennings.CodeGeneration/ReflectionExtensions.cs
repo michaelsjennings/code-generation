@@ -79,13 +79,13 @@ namespace MSJennings.CodeGeneration
             {
                 return ModelPropertyLogicalType.Byte;
             }
-            else if (type == typeof(DateTime))
-            {
-                return ModelPropertyLogicalType.DateAndTime;
-            }
             else if (type == typeof(char))
             {
                 return ModelPropertyLogicalType.Character;
+            }
+            else if (type == typeof(DateTime))
+            {
+                return ModelPropertyLogicalType.DateAndTime;
             }
             else if (type.IsIn(typeof(float), typeof(double), typeof(decimal)))
             {
@@ -95,7 +95,7 @@ namespace MSJennings.CodeGeneration
             {
                 return ModelPropertyLogicalType.Integer;
             }
-            else if (type == typeof(string))
+            else if (type.IsIn(typeof(string), typeof(Guid)))
             {
                 return ModelPropertyLogicalType.String;
             }
