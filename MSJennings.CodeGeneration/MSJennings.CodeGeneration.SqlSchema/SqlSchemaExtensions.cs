@@ -258,5 +258,110 @@ namespace MSJennings.CodeGeneration.SqlSchema
                 }
             }
         }
+
+        public static ModelPropertyType ToModelPropertyType(this SqlDataType sqlDataType)
+        {
+            if (sqlDataType == null)
+            {
+                throw new ArgumentNullException(nameof(sqlDataType));
+            }
+
+            var logicalType = sqlDataType.ToModelPropertyLogicalType();
+
+            if (logicalType == ModelPropertyLogicalType.List)
+            {
+                return new ModelPropertyType
+                {
+                    LogicalType = logicalType,
+                    ObjectTypeName = null,
+                    ListItemType = new ModelPropertyType
+                    {
+                        LogicalType = ModelPropertyLogicalType.Byte,
+                        ObjectTypeName = null,
+                        ListItemType = null,
+                    }
+                };
+            }
+
+            if (logicalType == ModelPropertyLogicalType.Object)
+            {
+                return new ModelPropertyType
+                {
+                    LogicalType = logicalType,
+                    ObjectTypeName = sqlDataType.SqlTypeName,
+                    ListItemType = null,
+                };
+            }
+
+            return new ModelPropertyType
+            {
+                LogicalType = logicalType,
+                ObjectTypeName = null,
+                ListItemType = null,
+            };
+        }
+
+        private static ModelPropertyLogicalType ToModelPropertyLogicalType(this SqlDataType sqlDataType)
+        {
+            if (sqlDataType == null)
+            {
+                throw new ArgumentNullException(nameof(sqlDataType));
+            }
+
+            switch (sqlDataType.SqlDbType)
+            {
+                case SqlDbType.Bit:
+                    return ModelPropertyLogicalType.Boolean;
+
+                case SqlDbType.Binary:
+                case SqlDbType.Image:
+                case SqlDbType.VarBinary:
+                case SqlDbType.Timestamp:
+                    return ModelPropertyLogicalType.List;
+
+                case SqlDbType.Char:
+                case SqlDbType.NChar:
+                    return ModelPropertyLogicalType.Character;
+
+                case SqlDbType.Date:
+                    return ModelPropertyLogicalType.Date;
+
+                case SqlDbType.DateTime:
+                case SqlDbType.DateTime2:
+                case SqlDbType.DateTimeOffset:
+                case SqlDbType.SmallDateTime:
+                    return ModelPropertyLogicalType.DateAndTime;
+
+                case SqlDbType.Decimal:
+                case SqlDbType.Float:
+                case SqlDbType.Money:
+                case SqlDbType.Real:
+                case SqlDbType.SmallMoney:
+                    return ModelPropertyLogicalType.Decimal;
+
+                case SqlDbType.BigInt:
+                case SqlDbType.Int:
+                case SqlDbType.SmallInt:
+                case SqlDbType.TinyInt:
+                    return ModelPropertyLogicalType.Integer;
+
+                case SqlDbType.NText:
+                case SqlDbType.NVarChar:
+                case SqlDbType.Text:
+                case SqlDbType.UniqueIdentifier:
+                case SqlDbType.VarChar:
+                case SqlDbType.Xml:
+                    return ModelPropertyLogicalType.String;
+
+                case SqlDbType.Time:
+                    return ModelPropertyLogicalType.Time;
+
+                case SqlDbType.Structured:
+                case SqlDbType.Udt:
+                case SqlDbType.Variant:
+                default:
+                    return ModelPropertyLogicalType.Object;
+            }
+        }
     }
 }
