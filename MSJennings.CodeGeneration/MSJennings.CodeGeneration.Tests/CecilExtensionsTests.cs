@@ -1,6 +1,8 @@
 ﻿using Mono.Cecil;
+using MSJennings.CodeGeneration.Tests.TestAssembly.Quizzes;
 using System;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace MSJennings.CodeGeneration.Tests
@@ -9,7 +11,8 @@ namespace MSJennings.CodeGeneration.Tests
     {
         private static AssemblyDefinition LoadTestAssembly()
         {
-            var testAssemblyFileName = "MSJennings.CodeGeneration.Tests.TestAssembly.dll";
+            var testAssembly = typeof(Quiz).Assembly;
+            var testAssemblyFileName = testAssembly.Location;
             var assemblyDefinition = AssemblyDefinition.ReadAssembly(testAssemblyFileName);
             return assemblyDefinition;
         }

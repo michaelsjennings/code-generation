@@ -40,7 +40,7 @@ namespace MSJennings.CodeGeneration.Tests
         }
 
         [Fact]
-        public void LoadFromTypes_WithListOfTypes_ShouldReturnExpectedJsonString()
+        public void LoadFromTypes_WithListOfTypes_ShouldLoadExpectedModel()
         {
             // arrange
             var model = new CodeGenerationModel();
@@ -64,6 +64,81 @@ namespace MSJennings.CodeGeneration.Tests
             Assert.Contains(model.Entities, x => x.Name.Equals(nameof(Quiz), StringComparison.Ordinal));
             Assert.Contains(model.Entities, x => x.Name.Equals(nameof(Question), StringComparison.Ordinal));
             
+            var quizEntity = model.Entities.First(x => x.Name.Equals(nameof(Quiz), StringComparison.Ordinal));
+            var questionEntity = model.Entities.First(x => x.Name.Equals(nameof(Question), StringComparison.Ordinal));
+
+            // assert that entities have the expected number of properties
+            Assert.Equal(7, quizEntity.Properties.Count);
+            Assert.Equal(5, questionEntity.Properties.Count);
+
+            // assert that entities have the expected properties and property types
+            Assert.Contains(quizEntity.Properties, x =>
+                x.Name.Equals(nameof(Quiz.Id), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Integer);
+
+            Assert.Contains(quizEntity.Properties, x =>
+                x.Name.Equals(nameof(Quiz.Name), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.String);
+
+            Assert.Contains(quizEntity.Properties, x =>
+                x.Name.Equals(nameof(Quiz.CreatedDate), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.DateAndTime);
+
+            Assert.Contains(quizEntity.Properties, x =>
+                x.Name.Equals(nameof(Quiz.IsActive), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Boolean);
+
+            Assert.Contains(quizEntity.Properties, x =>
+                x.Name.Equals(nameof(Quiz.PassingScore), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Decimal);
+
+            Assert.Contains(quizEntity.Properties, x =>
+                x.Name.Equals(nameof(Quiz.Topics), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
+                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.String);
+
+            Assert.Contains(quizEntity.Properties, x =>
+                x.Name.Equals(nameof(Quiz.Questions), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
+                x.PropertyType.ListItemType.ObjectTypeName.Equals(nameof(Question), StringComparison.Ordinal));
+
+            Assert.Contains(questionEntity.Properties, x =>
+                x.Name.Equals(nameof(Question.Choices), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
+                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.KeyValuePair);
+
+            Assert.Contains(questionEntity.Properties, x =>
+                x.Name.Equals(nameof(Question.CorrectChoice), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Character);
+
+            Assert.Contains(questionEntity.Properties, x =>
+                x.Name.Equals(nameof(Question.QuizIds), StringComparison.Ordinal) &&
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
+                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Integer);
+        }
+
+        [Fact]
+        public void LoadFromAssembly_WithValidAssembly_ShouldLoadExpectedModel()
+        {
+            // arrange
+            var model = new CodeGenerationModel();
+
+            var testAssembly = typeof(Quiz).Assembly;
+            var testAssemblyFileName = testAssembly.Location;
+
+            // act
+            model.LoadFromAssembly(testAssemblyFileName);
+
+            // assert that the number of namespaces is correct
+            Assert.Equal(1, model.Namespaces.Count);
+
+            // assert that the number of enties is correct
+            Assert.Equal(2, model.Entities.Count());
+
+            // assert that the expected entities are present
+            Assert.Contains(model.Entities, x => x.Name.Equals(nameof(Quiz), StringComparison.Ordinal));
+            Assert.Contains(model.Entities, x => x.Name.Equals(nameof(Question), StringComparison.Ordinal));
+
             var quizEntity = model.Entities.First(x => x.Name.Equals(nameof(Quiz), StringComparison.Ordinal));
             var questionEntity = model.Entities.First(x => x.Name.Equals(nameof(Question), StringComparison.Ordinal));
 
