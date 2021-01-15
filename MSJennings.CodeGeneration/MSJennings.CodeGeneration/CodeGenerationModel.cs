@@ -222,6 +222,11 @@ namespace MSJennings.CodeGeneration
             }
         }
 
+        public void LoadFromTypes(params Type[] types)
+        {
+            LoadFromTypes(types.AsEnumerable());
+        }
+
         public void LoadFromAssembly(string assemblyFileName)
         {
             if (string.IsNullOrWhiteSpace(assemblyFileName))

@@ -57,7 +57,7 @@ namespace MSJennings.CodeGeneration.Tests
         }
 
         [Fact]
-        public void LoadFromAssembly_WithValidAssembly_ShouldLoadExpectedModel()
+        public void LoadFromAssembly_WithAssemblyFileName_ShouldLoadExpectedModel()
         {
             // arrange
             var model = new CodeGenerationModel();
@@ -70,6 +70,46 @@ namespace MSJennings.CodeGeneration.Tests
 
             // assert
             AssertIsValidModel(model);
+        }
+
+        [Fact]
+        public void LoadFromOtherModel_WithExistingModel_ShouldLoadExpectedModel()
+        {
+            // arrange
+            var originalModel = new CodeGenerationModel();
+
+            originalModel.LoadFromTypes(
+                typeof(Quiz),
+                typeof(Question));
+
+            var newModel = new CodeGenerationModel();
+
+            // act
+            newModel.LoadFromOtherModel(originalModel);
+
+            // assert
+            AssertIsValidModel(newModel);
+        }
+
+        [Fact]
+        public void LoadFromJson_WithExistingModelJson_ShouldLoadExpectedModel()
+        {
+            // arrange
+            var originalModel = new CodeGenerationModel();
+
+            originalModel.LoadFromTypes(
+                typeof(Quiz),
+                typeof(Question));
+
+            var originalModelJson = originalModel.ToJson();
+
+            var newModel = new CodeGenerationModel();
+
+            // act
+            newModel.LoadFromJson(originalModelJson);
+
+            // assert
+            AssertIsValidModel(newModel);
         }
 
         private void AssertIsValidModel(CodeGenerationModel model)
