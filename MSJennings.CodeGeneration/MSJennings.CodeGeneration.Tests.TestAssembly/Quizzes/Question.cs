@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MSJennings.CodeGeneration.Tests.TestAssembly.Quizzes
 {
@@ -8,6 +9,7 @@ namespace MSJennings.CodeGeneration.Tests.TestAssembly.Quizzes
 
         public string Prompt { get; set; }
 
+        [Required]
         public IDictionary<char, string> Choices { get; } = new Dictionary<char, string>();
 
         public char CorrectChoice { get; set; }

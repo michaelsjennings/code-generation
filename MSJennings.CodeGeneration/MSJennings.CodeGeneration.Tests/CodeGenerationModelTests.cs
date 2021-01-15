@@ -18,18 +18,18 @@ namespace MSJennings.CodeGeneration.Tests
                 .SetCurrentNamespace("MSJennings.Quizzes")
 
                 .AddEntity("Quiz")
-                .AddProperty("Id", ModelPropertyLogicalType.Integer)
+                .AddProperty("Id", ModelPropertyLogicalType.Integer, isRequired: true)
                 .AddProperty("Name", ModelPropertyLogicalType.String)
                 .AddProperty("CreatedDate", ModelPropertyLogicalType.DateAndTime)
                 .AddProperty("IsActive", ModelPropertyLogicalType.Boolean)
                 .AddProperty("PassingScore", ModelPropertyLogicalType.Decimal)
                 .AddListProperty("Topics", ModelPropertyLogicalType.String)
-                .AddListProperty("Questions", "Question")
+                .AddListProperty("Questions", "Question", isRequired: true)
 
                 .AddEntity("Question")
                 .AddProperty("Id", ModelPropertyLogicalType.Integer)
                 .AddProperty("Prompt", ModelPropertyLogicalType.String)
-                .AddListProperty("Choices", ModelPropertyLogicalType.KeyValuePair)
+                .AddListProperty("Choices", ModelPropertyLogicalType.KeyValuePair, isRequired: true)
                 .AddProperty("CorrectChoice", ModelPropertyLogicalType.Character)
                 .AddListProperty("QuizIds", ModelPropertyLogicalType.Integer);
 
@@ -134,47 +134,57 @@ namespace MSJennings.CodeGeneration.Tests
             // assert that entities have the expected properties and property types
             Assert.Contains(quizEntity.Properties, x =>
                 x.Name.Equals("Id", StringComparison.Ordinal) &&
-                x.PropertyType.LogicalType == ModelPropertyLogicalType.Integer);
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Integer &&
+                x.IsRequired);
 
             Assert.Contains(quizEntity.Properties, x =>
                 x.Name.Equals("Name", StringComparison.Ordinal) &&
-                x.PropertyType.LogicalType == ModelPropertyLogicalType.String);
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.String &&
+                !x.IsRequired);
 
             Assert.Contains(quizEntity.Properties, x =>
                 x.Name.Equals("CreatedDate", StringComparison.Ordinal) &&
-                x.PropertyType.LogicalType == ModelPropertyLogicalType.DateAndTime);
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.DateAndTime &&
+                !x.IsRequired);
 
             Assert.Contains(quizEntity.Properties, x =>
                 x.Name.Equals("IsActive", StringComparison.Ordinal) &&
-                x.PropertyType.LogicalType == ModelPropertyLogicalType.Boolean);
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Boolean &&
+                !x.IsRequired);
 
             Assert.Contains(quizEntity.Properties, x =>
                 x.Name.Equals("PassingScore", StringComparison.Ordinal) &&
-                x.PropertyType.LogicalType == ModelPropertyLogicalType.Decimal);
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Decimal &&
+                !x.IsRequired);
 
             Assert.Contains(quizEntity.Properties, x =>
                 x.Name.Equals("Topics", StringComparison.Ordinal) &&
                 x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
-                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.String);
+                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.String &&
+                !x.IsRequired);
 
             Assert.Contains(quizEntity.Properties, x =>
                 x.Name.Equals("Questions", StringComparison.Ordinal) &&
                 x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
-                x.PropertyType.ListItemType.ObjectTypeName.Equals("Question", StringComparison.Ordinal));
+                x.PropertyType.ListItemType.ObjectTypeName.Equals("Question", StringComparison.Ordinal) &&
+                x.IsRequired);
 
             Assert.Contains(questionEntity.Properties, x =>
                 x.Name.Equals("Choices", StringComparison.Ordinal) &&
                 x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
-                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.KeyValuePair);
+                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.KeyValuePair &&
+                x.IsRequired);
 
             Assert.Contains(questionEntity.Properties, x =>
                 x.Name.Equals("CorrectChoice", StringComparison.Ordinal) &&
-                x.PropertyType.LogicalType == ModelPropertyLogicalType.Character);
+                x.PropertyType.LogicalType == ModelPropertyLogicalType.Character &&
+                !x.IsRequired);
 
             Assert.Contains(questionEntity.Properties, x =>
                 x.Name.Equals("QuizIds", StringComparison.Ordinal) &&
                 x.PropertyType.LogicalType == ModelPropertyLogicalType.List &&
-                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Integer);
+                x.PropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Integer &&
+                !x.IsRequired);
         }
     }
 }
