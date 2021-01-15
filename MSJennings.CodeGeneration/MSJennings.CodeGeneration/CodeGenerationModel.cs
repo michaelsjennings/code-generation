@@ -18,6 +18,8 @@ namespace MSJennings.CodeGeneration
 
         public IList<ModelNamespace> Namespaces { get; } = new List<ModelNamespace>();
 
+        public IEnumerable<ModelEntity> Entities => Namespaces.SelectMany(x => x.Entities);
+
         public CodeGenerationModel SetCurrentNamespace(string name)
         {
             _currentNamespace = Namespaces.FirstOrDefault(x => x.Name.Equals(name, StringComparison.Ordinal));
@@ -199,7 +201,14 @@ namespace MSJennings.CodeGeneration
 
                     if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
                     {
-                        _ = AddListProperty(property.Name, modelPropertyType.ListItemType.LogicalType, property.HasRequiredAttribute());
+                        if (modelPropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Object)
+                        {
+                            _ = AddListProperty(property.Name, modelPropertyType.ListItemType.ObjectTypeName, property.HasRequiredAttribute());
+                        }
+                        else
+                        {
+                            _ = AddListProperty(property.Name, modelPropertyType.ListItemType.LogicalType, property.HasRequiredAttribute());
+                        }
                     }
                     else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
                     {
@@ -253,7 +262,14 @@ namespace MSJennings.CodeGeneration
 
                     if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
                     {
-                        _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.LogicalType, propertyDefinition.HasRequiredAttribute());
+                        if (modelPropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Object)
+                        {
+                            _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.ObjectTypeName, propertyDefinition.HasRequiredAttribute());
+                        }
+                        else
+                        {
+                            _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.LogicalType, propertyDefinition.HasRequiredAttribute());
+                        }
                     }
                     else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
                     {

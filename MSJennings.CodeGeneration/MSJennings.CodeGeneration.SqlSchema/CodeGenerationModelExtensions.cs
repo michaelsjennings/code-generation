@@ -38,7 +38,14 @@ namespace MSJennings.CodeGeneration
 
                     if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
                     {
-                        _ = model.AddListProperty(column.Name, modelPropertyType.ListItemType.LogicalType, !column.IsNullable);
+                        if (modelPropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Object)
+                        {
+                            _ = model.AddListProperty(column.Name, modelPropertyType.ListItemType.ObjectTypeName, !column.IsNullable);
+                        }
+                        else
+                        {
+                            _ = model.AddListProperty(column.Name, modelPropertyType.ListItemType.LogicalType, !column.IsNullable);
+                        }
                     }
                     else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
                     {

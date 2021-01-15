@@ -19,7 +19,10 @@ namespace MSJennings.CodeGeneration
 
             if (logicalType == ModelPropertyLogicalType.List)
             {
-                var isDictionary = type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IDictionary<,>));
+                var isDictionary =
+                    (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IDictionary<,>)) ||
+                    type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IDictionary<,>));
+
                 if (isDictionary)
                 {
                     return new ModelPropertyType
