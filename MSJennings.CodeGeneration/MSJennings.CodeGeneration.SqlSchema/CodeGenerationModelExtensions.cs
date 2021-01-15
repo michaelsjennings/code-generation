@@ -1,31 +1,24 @@
 ﻿using MSJennings.CodeGeneration.SqlSchema;
 using MSJennings.SqlSchema;
 using System;
-using System.Threading.Tasks;
 
 namespace MSJennings.CodeGeneration
 {
     public static class CodeGenerationModelExtensions
     {
-        public static async Task LoadFromSqlDatabase(this CodeGenerationModel model, string connectionString)
+        public static void LoadFromSqlDatabase(this CodeGenerationModel model, SqlDatabase database)
         {
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
             }
 
-            if (string.IsNullOrWhiteSpace(connectionString))
+            if (database == null)
             {
-                throw new ArgumentNullException(nameof(connectionString));
+                throw new ArgumentNullException(nameof(database));
             }
 
             model.Reset();
-
-            var metadata = new SqlMetadata();
-            await metadata.LoadFromDatabaseAsync(connectionString);
-
-            var database = new SqlDatabase();
-            database.LoadFromMetadata(metadata);
 
             foreach (var table in database.Tables)
             {
