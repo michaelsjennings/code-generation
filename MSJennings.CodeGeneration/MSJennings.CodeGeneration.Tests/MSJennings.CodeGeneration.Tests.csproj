@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MSJennings.CodeGeneration.Tests.TestAssembly\MSJennings.CodeGeneration.Tests.TestAssembly.csproj" />
     <ProjectReference Include="..\MSJennings.CodeGeneration\MSJennings.CodeGeneration.csproj" />
   </ItemGroup>
 

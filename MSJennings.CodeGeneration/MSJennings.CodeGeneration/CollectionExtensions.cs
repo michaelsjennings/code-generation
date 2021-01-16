@@ -190,5 +190,46 @@ namespace MSJennings.CodeGeneration
         }
 
         #endregion
+
+        #region ForEach
+
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
+        {
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (var item in collection)
+            {
+                action(item);
+            }
+        }
+
+        #endregion
+
+        #region AddRange
+
+        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
+        {
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (items == null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+
+            items.ForEach(x => collection.Add(x));
+        }
+
+        #endregion
     }
 }

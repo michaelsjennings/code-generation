@@ -3,4 +3,8 @@
 // Project-level suppressions either have no target or are given 
 // a specific target and scoped to a namespace, type, member, etc.
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "<Pending>", Scope = "member", Target = "~M:MSJennings.CodeGeneration.SqlSchema.SqlSchemaExtensions.CSharpTypeName(MSJennings.SqlSchema.SqlColumnBase,System.Boolean)~System.String")]
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "<Pending>", Scope = "member", Target = "~M:MSJennings.CodeGeneration.SqlSchema.SqlSchemaExtensions.CSharpTypeName(MSJennings.SqlSchema.SqlColumnBase,System.Boolean)~System.String")]
+[assembly: SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "<Pending>", Scope = "member", Target = "~M:MSJennings.CodeGeneration.SqlSchema.SqlSchemaExtensions.ToModelPropertyLogicalType(MSJennings.SqlSchema.SqlDataType)~MSJennings.CodeGeneration.ModelPropertyLogicalType")]
+[assembly: SuppressMessage("Style", "IDE0045:Convert to conditional expression", Justification = "<Pending>", Scope = "member", Target = "~M:MSJennings.CodeGeneration.CodeGenerationModelExtensions.LoadFromSqlDatabase(MSJennings.CodeGeneration.CodeGenerationModel,MSJennings.SqlSchema.SqlDatabase)")]
