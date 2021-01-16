@@ -19,7 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MSJennings.CodeGeneration" Version="1.0.7685.32808" />
+    <PackageReference Include="MSJennings.CodeGeneration" Version="1.0.7685.34383" />
     <PackageReference Include="MSJennings.SqlSchema" Version="1.0.7318.38797" />
   </ItemGroup>
 
