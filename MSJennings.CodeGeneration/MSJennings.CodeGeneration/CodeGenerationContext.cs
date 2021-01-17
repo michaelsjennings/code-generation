@@ -6,13 +6,14 @@
 
         public CodeGenerationModel Model { get; private set; }
 
-        public CodeGenerationContext() : this(null)
+        public CodeGenerationContext() : this(null, null)
         {
         }
 
-        public CodeGenerationContext(CodeWriter codeWriter)
+        public CodeGenerationContext(CodeGenerationModel model, CodeWriter codeWriter)
         {
             CodeWriter = codeWriter ?? new CodeWriter();
+            Model = model ?? new CodeGenerationModel();
         }
     }
 }
