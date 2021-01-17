@@ -239,50 +239,60 @@ namespace MSJennings.CodeGeneration
                 throw new FileNotFoundException("The file was not found at the specified path.", assemblyFileName);
             }
 
-            var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFileName);
-
-            foreach (var typeDefinition in assemblyDefinition.MainModule.Types)
+            using (var assemblyResolver = new DefaultAssemblyResolver())
             {
-                if (typeDefinition.CustomAttributes.Any(x => x.AttributeType.Name.Equals(nameof(GeneratedCodeAttribute), StringComparison.Ordinal)))
-                {
-                    continue;
-                }
+                assemblyResolver.AddSearchDirectory(Path.GetDirectoryName(assemblyFileName));
 
-                if (!typeDefinition.IsPublic)
-                {
-                    continue;
-                }
+                var assemblyDefinition = AssemblyDefinition.ReadAssembly(assemblyFileName, new ReaderParameters { AssemblyResolver = assemblyResolver });
 
-                var publicInstanceProperties = typeDefinition.GetPublicInstanceProperties();
-                if (!publicInstanceProperties.Any())
+                foreach (var typeDefinition in assemblyDefinition.MainModule.Types)
                 {
-                    continue;
-                }
-                _ = SetCurrentNamespace(typeDefinition.Namespace);
-                _ = AddEntity(typeDefinition.Name);
-
-                foreach (var propertyDefinition in publicInstanceProperties)
-                {
-                    var modelPropertyType = propertyDefinition.PropertyType.ToModelPropertyType();
-
-                    if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
+                    if (typeDefinition.CustomAttributes.Any(x => x.AttributeType.Name.Equals(nameof(GeneratedCodeAttribute), StringComparison.Ordinal)))
                     {
-                        if (modelPropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Object)
+                        continue;
+                    }
+
+                    if (!typeDefinition.IsPublic)
+                    {
+                        continue;
+                    }
+
+                    if (!typeDefinition.IsClass)
+                    {
+                        continue;
+                    }
+
+                    var publicInstanceProperties = typeDefinition.GetPublicInstanceProperties();
+                    if (!publicInstanceProperties.Any())
+                    {
+                        continue;
+                    }
+                    _ = SetCurrentNamespace(typeDefinition.Namespace);
+                    _ = AddEntity(typeDefinition.Name);
+
+                    foreach (var propertyDefinition in publicInstanceProperties)
+                    {
+                        var modelPropertyType = propertyDefinition.PropertyType.ToModelPropertyType();
+
+                        if (modelPropertyType.LogicalType == ModelPropertyLogicalType.List)
                         {
-                            _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.ObjectTypeName, propertyDefinition.HasRequiredAttribute());
+                            if (modelPropertyType.ListItemType.LogicalType == ModelPropertyLogicalType.Object)
+                            {
+                                _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.ObjectTypeName, propertyDefinition.HasRequiredAttribute());
+                            }
+                            else
+                            {
+                                _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.LogicalType, propertyDefinition.HasRequiredAttribute());
+                            }
+                        }
+                        else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
+                        {
+                            _ = AddProperty(propertyDefinition.Name, propertyDefinition.PropertyType.Name, propertyDefinition.HasRequiredAttribute());
                         }
                         else
                         {
-                            _ = AddListProperty(propertyDefinition.Name, modelPropertyType.ListItemType.LogicalType, propertyDefinition.HasRequiredAttribute());
+                            _ = AddProperty(propertyDefinition.Name, modelPropertyType.LogicalType, propertyDefinition.HasRequiredAttribute());
                         }
-                    }
-                    else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
-                    {
-                        _ = AddProperty(propertyDefinition.Name, propertyDefinition.PropertyType.Name, propertyDefinition.HasRequiredAttribute());
-                    }
-                    else
-                    {
-                        _ = AddProperty(propertyDefinition.Name, modelPropertyType.LogicalType, propertyDefinition.HasRequiredAttribute());
                     }
                 }
             }

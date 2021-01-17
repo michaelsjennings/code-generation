@@ -139,7 +139,7 @@ namespace MSJennings.CodeGeneration
                 throw new ArgumentNullException(nameof(typeDefinition));
             }
 
-            return typeDefinition.Properties.Where(x => x.HasThis && x.PropertyType.Resolve().IsPublic);
+            return typeDefinition.Properties.Where(x => x.HasThis && (x.PropertyType.Resolve()?.IsPublic ?? false));
         }
 
         public static bool HasRequiredAttribute(this PropertyDefinition propertyDefinition)
