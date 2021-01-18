@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -360,11 +361,13 @@ namespace MSJennings.CodeGeneration
 
         private void WriteFileSegment(FileSegment fileSegment)
         {
-            var directoryName = Path.GetDirectoryName(fileSegment.FileName);
+            var directoryName = ToFullPath(Path.GetDirectoryName(fileSegment.FileName));
             _ = Directory.CreateDirectory(directoryName);
 
+            var fullFileName = Path.Combine(directoryName, Path.GetFileName(fileSegment.FileName));
+
             var contents = GetFileSegmentContents(fileSegment);
-            File.WriteAllText(fileSegment.FileName, contents);
+            File.WriteAllText(fullFileName, contents);
 
             if (RemoveFilesFromOutputAfterWriting)
             {
@@ -374,8 +377,10 @@ namespace MSJennings.CodeGeneration
 
         private async Task WriteFileSegmentAsync(FileSegment fileSegment)
         {
-            var directoryName = Path.GetDirectoryName(fileSegment.FileName);
+            var directoryName = ToFullPath(Path.GetDirectoryName(fileSegment.FileName));
             _ = Directory.CreateDirectory(directoryName);
+
+            var fullFileName = Path.Combine(directoryName, Path.GetFileName(fileSegment.FileName));
 
             var contents = GetFileSegmentContents(fileSegment);
 
@@ -383,7 +388,7 @@ namespace MSJennings.CodeGeneration
             // see: http://jonesie.kiwi/2018/05/17/lemony-snippet-async-file-read-write-in-net-standard-2/
             // await File.WriteAllTextAsync(fileSegment.FileName, contents);
 
-            using (var streamWriter = File.CreateText(fileSegment.FileName))
+            using (var streamWriter = File.CreateText(fullFileName))
             {
                 await streamWriter.WriteAsync(contents);
             }
@@ -392,6 +397,30 @@ namespace MSJennings.CodeGeneration
             {
                 RemoveFileSegment(fileSegment);
             }
+        }
+
+        private static bool IsFullPath(string path)
+        {
+            return !string.IsNullOrWhiteSpace(path)
+                && path.IndexOfAny(Path.GetInvalidPathChars().ToArray()) == -1
+                && Path.IsPathRooted(path)
+                && !Path.GetPathRoot(path).Equals(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal);
+        }
+
+        private static string ToFullPath(string path)
+        {
+            if (!IsFullPath(path))
+            {
+                while (path.StartsWith("\\"))
+                {
+                    path = path.Substring(1);
+                }
+
+                var baseDirectoryName = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+                path = Path.Combine(baseDirectoryName, path);
+            }
+
+            return Path.GetFullPath(path);
         }
 
         private class FileSegment

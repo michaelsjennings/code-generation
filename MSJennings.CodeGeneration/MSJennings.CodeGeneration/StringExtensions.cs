@@ -80,6 +80,16 @@ namespace MSJennings.CodeGeneration
             return words.Pascalize();
         }
 
+        public static string ToDashSeparated(this string s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static string ToUnderscoreSeparated(this string s)
+        {
+            throw new NotImplementedException();
+        }
+
         public static string ToSingular(this string s)
         {
             if (string.IsNullOrWhiteSpace(s))
