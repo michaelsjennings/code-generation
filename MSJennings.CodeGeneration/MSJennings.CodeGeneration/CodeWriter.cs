@@ -153,6 +153,26 @@ namespace MSJennings.CodeGeneration
             return this;
         }
 
+        public CodeWriter ForEach<T>(IEnumerable<T> items, Action<T> action)
+        {
+            if (items == null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (var item in items)
+            {
+                action(item);
+            }
+
+            return this;
+        }
+
         public CodeWriter BeginFile(string fileName)
         {
             _ = EndFile();

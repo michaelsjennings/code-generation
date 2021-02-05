@@ -65,8 +65,7 @@ namespace MSJennings.CodeGeneration
                 throw new ArgumentNullException(nameof(s));
             }
 
-            var words = s.ToWordsString("_");
-            return words.Camelize();
+            return s.ToUnderscoreSeparated().Camelize();
         }
 
         public static string ToPascalCase(this string s)
@@ -76,18 +75,27 @@ namespace MSJennings.CodeGeneration
                 throw new ArgumentNullException(nameof(s));
             }
 
-            var words = s.ToWordsString("_");
-            return words.Pascalize();
+            return s.ToUnderscoreSeparated().Pascalize();
         }
 
         public static string ToDashSeparated(this string s)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+
+            return s.ToWordsString("-");
         }
 
         public static string ToUnderscoreSeparated(this string s)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                throw new ArgumentNullException(nameof(s));
+            }
+
+            return s.ToWordsString("_");
         }
 
         public static string ToSingular(this string s)
