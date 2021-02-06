@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +33,12 @@ namespace MSJennings.CodeGeneration
         public int IndentLevel { get; private set; }
 
         public bool RemoveFilesFromOutputAfterWriting { get; set; } = true;
+
+        public string OutputDirectory { get; set; } = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            typeof(CodeWriter).Namespace,
+            "Output",
+            DateTime.Now.ToString("yyyy-MM-dd-HHmmss", CultureInfo.InvariantCulture));
 
         public CodeWriter() : this(null)
         {
@@ -382,7 +387,7 @@ namespace MSJennings.CodeGeneration
         private void WriteFileSegment(FileSegment fileSegment)
         {
             var directoryName = ToFullPath(Path.GetDirectoryName(fileSegment.FileName));
-            _ = Directory.CreateDirectory(directoryName);
+            CleanDirectory(directoryName);
 
             var fullFileName = Path.Combine(directoryName, Path.GetFileName(fileSegment.FileName));
 
@@ -398,7 +403,7 @@ namespace MSJennings.CodeGeneration
         private async Task WriteFileSegmentAsync(FileSegment fileSegment)
         {
             var directoryName = ToFullPath(Path.GetDirectoryName(fileSegment.FileName));
-            _ = Directory.CreateDirectory(directoryName);
+            CleanDirectory(directoryName);
 
             var fullFileName = Path.Combine(directoryName, Path.GetFileName(fileSegment.FileName));
 
@@ -419,6 +424,16 @@ namespace MSJennings.CodeGeneration
             }
         }
 
+        private static void CleanDirectory(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, recursive: true);
+            }
+
+            _ = Directory.CreateDirectory(path);
+        }
+
         private static bool IsFullPath(string path)
         {
             return !string.IsNullOrWhiteSpace(path)
@@ -427,7 +442,7 @@ namespace MSJennings.CodeGeneration
                 && !Path.GetPathRoot(path).Equals(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal);
         }
 
-        private static string ToFullPath(string path)
+        private string ToFullPath(string path)
         {
             if (!IsFullPath(path))
             {
@@ -436,8 +451,7 @@ namespace MSJennings.CodeGeneration
                     path = path.Substring(1);
                 }
 
-                var baseDirectoryName = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                path = Path.Combine(baseDirectoryName, path);
+                path = Path.Combine(OutputDirectory, path);
             }
 
             return Path.GetFullPath(path);
