@@ -1,4 +1,6 @@
-﻿namespace MSJennings.CodeGeneration
+﻿using System.Collections.Generic;
+
+namespace MSJennings.CodeGeneration
 {
     public class ModelPropertyType
     {
@@ -7,6 +9,8 @@
         public string ObjectTypeName { get; set; }
 
         public ModelPropertyType ListItemType { get; set; }
+
+        public IList<ModelPropertyType> GenericArgumentTypes { get; } = new List<ModelPropertyType>();
     }
 
     public enum ModelPropertyLogicalType

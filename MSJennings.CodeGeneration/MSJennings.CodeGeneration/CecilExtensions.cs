@@ -63,6 +63,11 @@ namespace MSJennings.CodeGeneration
 
             if (logicalType == ModelPropertyLogicalType.Object)
             {
+                if (typeReference.IsGenericInstance)
+                {
+                    return typeReference.ToGenericModelPropertyType();
+                }
+
                 return new ModelPropertyType
                 {
                     LogicalType = logicalType,
@@ -129,6 +134,28 @@ namespace MSJennings.CodeGeneration
             {
                 return ModelPropertyLogicalType.Object;
             }
+        }
+
+        private static ModelPropertyType ToGenericModelPropertyType(this TypeReference typeReference)
+        {
+            if (!typeReference.IsGenericInstance)
+            {
+                return typeReference.ToModelPropertyType();
+            }
+
+            var modelPropertyType = new ModelPropertyType
+            {
+                LogicalType = ModelPropertyLogicalType.Object,
+                ObjectTypeName = typeReference.Name.Substring(0, typeReference.Name.IndexOf("`", StringComparison.Ordinal))
+            };
+
+            var genericTypeReference = (GenericInstanceType)typeReference;
+            foreach (var genericArgument in genericTypeReference.GenericArguments)
+            {
+                modelPropertyType.GenericArgumentTypes.Add(genericArgument.ToModelPropertyType());
+            }
+
+            return modelPropertyType;
         }
 
         public static IEnumerable<PropertyDefinition> GetPublicInstanceProperties(this TypeDefinition typeDefinition)

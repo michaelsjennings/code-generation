@@ -52,6 +52,11 @@ namespace MSJennings.CodeGeneration
 
             if (logicalType == ModelPropertyLogicalType.Object)
             {
+                if (type.IsGenericType)
+                {
+                    return type.ToGenericModelPropertyType();
+                }
+
                 return new ModelPropertyType
                 {
                     LogicalType = logicalType,
@@ -118,6 +123,27 @@ namespace MSJennings.CodeGeneration
             {
                 return ModelPropertyLogicalType.Object;
             }
+        }
+
+        private static ModelPropertyType ToGenericModelPropertyType(this Type type)
+        {
+            if (!type.IsGenericType)
+            {
+                return type.ToModelPropertyType();
+            }
+
+            var modelPropertyType = new ModelPropertyType
+            {
+                LogicalType = ModelPropertyLogicalType.Object,
+                ObjectTypeName = type.Name.Substring(0, type.Name.IndexOf("`", StringComparison.Ordinal))
+            };
+
+            foreach (var argumentType in type.GetGenericArguments())
+            {
+                modelPropertyType.GenericArgumentTypes.Add(argumentType.ToModelPropertyType());
+            }
+
+            return modelPropertyType;
         }
 
         public static bool HasRequiredAttribute(this PropertyInfo property)

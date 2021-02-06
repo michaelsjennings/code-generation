@@ -51,6 +51,21 @@ namespace MSJennings.CodeGeneration
             return this;
         }
 
+        public CodeGenerationModel AddProperty(string name, ModelPropertyType propertyType, bool isRequired = false)
+        {
+            var property = new ModelProperty
+            {
+                Entity = _currentEntity,
+                Name = name,
+                PropertyType = propertyType,
+                IsRequired = isRequired
+            };
+
+            _currentEntity.Properties.Add(property);
+
+            return this;
+        }
+
         public CodeGenerationModel AddProperty(string name, ModelPropertyLogicalType propertyType, bool isRequired = false)
         {
             _currentProperty = new ModelProperty
@@ -212,7 +227,14 @@ namespace MSJennings.CodeGeneration
                     }
                     else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
                     {
-                        _ = AddProperty(property.Name, property.PropertyType.Name, property.HasRequiredAttribute());
+                        if (modelPropertyType.GenericArgumentTypes.Any())
+                        {
+                            _ = AddProperty(property.Name, modelPropertyType, property.HasRequiredAttribute());
+                        }
+                        else
+                        {
+                            _ = AddProperty(property.Name, property.PropertyType.Name, property.HasRequiredAttribute());
+                        }
                     }
                     else
                     {
@@ -287,7 +309,14 @@ namespace MSJennings.CodeGeneration
                         }
                         else if (modelPropertyType.LogicalType == ModelPropertyLogicalType.Object)
                         {
-                            _ = AddProperty(propertyDefinition.Name, propertyDefinition.PropertyType.Name, propertyDefinition.HasRequiredAttribute());
+                            if (modelPropertyType.GenericArgumentTypes.Any())
+                            {
+                                _ = AddProperty(propertyDefinition.Name, modelPropertyType, propertyDefinition.HasRequiredAttribute());
+                            }
+                            else
+                            {
+                                _ = AddProperty(propertyDefinition.Name, propertyDefinition.PropertyType.Name, propertyDefinition.HasRequiredAttribute());
+                            }
                         }
                         else
                         {

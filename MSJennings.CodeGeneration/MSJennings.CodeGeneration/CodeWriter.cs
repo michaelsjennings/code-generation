@@ -387,7 +387,7 @@ namespace MSJennings.CodeGeneration
         private void WriteFileSegment(FileSegment fileSegment)
         {
             var directoryName = ToFullPath(Path.GetDirectoryName(fileSegment.FileName));
-            CleanDirectory(directoryName);
+            _ = Directory.CreateDirectory(directoryName);
 
             var fullFileName = Path.Combine(directoryName, Path.GetFileName(fileSegment.FileName));
 
@@ -403,7 +403,7 @@ namespace MSJennings.CodeGeneration
         private async Task WriteFileSegmentAsync(FileSegment fileSegment)
         {
             var directoryName = ToFullPath(Path.GetDirectoryName(fileSegment.FileName));
-            CleanDirectory(directoryName);
+            _ = Directory.CreateDirectory(directoryName);
 
             var fullFileName = Path.Combine(directoryName, Path.GetFileName(fileSegment.FileName));
 
@@ -422,16 +422,6 @@ namespace MSJennings.CodeGeneration
             {
                 RemoveFileSegment(fileSegment);
             }
-        }
-
-        private static void CleanDirectory(string path)
-        {
-            if (Directory.Exists(path))
-            {
-                Directory.Delete(path, recursive: true);
-            }
-
-            _ = Directory.CreateDirectory(path);
         }
 
         private static bool IsFullPath(string path)

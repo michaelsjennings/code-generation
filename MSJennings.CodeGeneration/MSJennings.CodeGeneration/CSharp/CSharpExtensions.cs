@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 
 namespace MSJennings.CodeGeneration.CSharp
 {
@@ -53,6 +55,26 @@ namespace MSJennings.CodeGeneration.CSharp
 
             if (!string.IsNullOrWhiteSpace(modelPropertyType.ObjectTypeName))
             {
+                if (modelPropertyType.GenericArgumentTypes.Any())
+                {
+                    var sb = new StringBuilder($"{modelPropertyType.ObjectTypeName}<");
+
+                    var isFirstArgument = true;
+                    foreach (var genericArgumentType in modelPropertyType.GenericArgumentTypes)
+                    {
+                        if (!isFirstArgument)
+                        {
+                            _ = sb.Append(", ");
+                        }
+
+                        _ = sb.Append(genericArgumentType.ToCSharpTypeName());
+                        isFirstArgument = false;
+                    }
+
+                    _ = sb.Append(">");
+                    return sb.ToString();
+                }
+
                 return modelPropertyType.ObjectTypeName;
             }
 
@@ -68,7 +90,7 @@ namespace MSJennings.CodeGeneration.CSharp
                     return "IDictionary<TKey, TValue>";
                 }
 
-                return $"IList<${modelPropertyType.ListItemType.LogicalType.ToCSharpTypeName()}>";
+                return $"IList<{modelPropertyType.ListItemType.LogicalType.ToCSharpTypeName()}>";
             }
 
             return modelPropertyType.LogicalType.ToCSharpTypeName();
