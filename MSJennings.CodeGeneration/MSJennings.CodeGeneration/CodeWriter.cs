@@ -178,6 +178,141 @@ namespace MSJennings.CodeGeneration
             return this;
         }
 
+        public CodeWriter AppendIf(bool condition, string value)
+        {
+            if (condition)
+            {
+                _ = Append(value);
+            }
+
+            return this;
+        }
+
+        public CodeWriter AppendIf(bool condition, string format, params object[] args)
+        {
+            if (condition)
+            {
+                _ = Append(format, args);
+            }
+
+            return this;
+        }
+
+        public CodeWriter AppendIf<T>(T item, Func<T, bool> predicate, string value)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (predicate(item))
+            {
+                _ = Append(value);
+            }
+
+            return this;
+        }
+
+        public CodeWriter AppendIf<T>(T item, Func<T, bool> predicate, string format, params object[] args)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (predicate(item))
+            {
+                _ = Append(format, args);
+            }
+
+            return this;
+        }
+
+        public CodeWriter AppendLineIf(bool condition, string value)
+        {
+            if (condition)
+            {
+                _ = AppendLine(value);
+            }
+
+            return this;
+        }
+
+        public CodeWriter AppendLineIf(bool condition, string format, params object[] args)
+        {
+            if (condition)
+            {
+                _ = AppendLine(format, args);
+            }
+
+            return this;
+        }
+
+        public CodeWriter AppendLineIf<T>(T item, Func<T, bool> predicate, string value)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (predicate(item))
+            {
+                _ = AppendLine(value);
+            }
+
+            return this;
+        }
+
+        public CodeWriter AppendLineIf<T>(T item, Func<T, bool> predicate, string format, params object[] args)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (predicate(item))
+            {
+                _ = AppendLine(format, args);
+            }
+
+            return this;
+        }
+
+        public CodeWriter If(bool condition, Action action)
+        {
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (condition)
+            {
+                action();
+            }
+
+            return this;
+        }
+
+        public CodeWriter If<T>(T item, Func<T, bool> predicate, Action<T> action)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (predicate(item))
+            {
+                action(item);
+            }
+
+            return this;
+        }
+
         public CodeWriter BeginFile(string fileName)
         {
             _ = EndFile();
