@@ -57,6 +57,12 @@ namespace MSJennings.CodeGeneration.CSharp
             {
                 if (modelPropertyType.GenericArgumentTypes.Any())
                 {
+                    if (modelPropertyType.ObjectTypeName.Equals(nameof(Nullable), StringComparison.Ordinal) &&
+                        modelPropertyType.GenericArgumentTypes.Count == 1)
+                    {
+                        return $"{modelPropertyType.GenericArgumentTypes.Single().ToCSharpTypeName()}?";
+                    }
+
                     var sb = new StringBuilder($"{modelPropertyType.ObjectTypeName}<");
 
                     var isFirstArgument = true;
