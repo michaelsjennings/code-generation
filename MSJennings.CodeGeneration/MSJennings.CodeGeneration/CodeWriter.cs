@@ -278,36 +278,54 @@ namespace MSJennings.CodeGeneration
             return this;
         }
 
-        public CodeWriter If(bool condition, Action action)
+        public CodeWriter If(bool condition, Action trueAction)
         {
-            if (action == null)
+            return If(condition, trueAction, null);
+        }
+
+        public CodeWriter If(bool condition, Action trueAction, Action falseAction)
+        {
+            if (trueAction == null)
             {
-                throw new ArgumentNullException(nameof(action));
+                throw new ArgumentNullException(nameof(trueAction));
             }
 
             if (condition)
             {
-                action();
+                trueAction();
+            }
+            else
+            {
+                falseAction?.Invoke();
             }
 
             return this;
         }
 
-        public CodeWriter If<T>(T item, Func<T, bool> predicate, Action<T> action)
+        public CodeWriter If<T>(T item, Func<T, bool> predicate, Action<T> trueAction)
+        {
+            return If(item, predicate, trueAction, null);
+        }
+
+        public CodeWriter If<T>(T item, Func<T, bool> predicate, Action<T> trueAction, Action<T> falseAction)
         {
             if (predicate == null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            if (action == null)
+            if (trueAction == null)
             {
-                throw new ArgumentNullException(nameof(action));
+                throw new ArgumentNullException(nameof(trueAction));
             }
 
             if (predicate(item))
             {
-                action(item);
+                trueAction(item);
+            }
+            else
+            {
+                falseAction?.Invoke(item);
             }
 
             return this;
