@@ -228,6 +228,16 @@ namespace MSJennings.CodeGeneration
             return this;
         }
 
+        public CodeWriter AppendLineIf(bool condition)
+        {
+            if (condition)
+            {
+                _ = AppendLine();
+            }
+
+            return this;
+        }
+
         public CodeWriter AppendLineIf(bool condition, string value)
         {
             if (condition)
