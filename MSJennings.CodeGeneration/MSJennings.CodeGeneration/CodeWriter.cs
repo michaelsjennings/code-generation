@@ -371,6 +371,21 @@ namespace MSJennings.CodeGeneration
             return this;
         }
 
+        public void CleanOutputDirectory()
+        {
+            var directoryInfo = new DirectoryInfo(OutputDirectory);
+
+            foreach (var file in directoryInfo.EnumerateFiles())
+            {
+                file.Delete();
+            }
+
+            foreach (var direcotry in directoryInfo.EnumerateDirectories())
+            {
+                direcotry.Delete(true);
+            }
+        }
+
         public void WriteAllFiles()
         {
             if (_fileSegments.Count < 1)
